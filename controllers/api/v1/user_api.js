@@ -6,6 +6,7 @@ const Sold = require('../../../models/sold')
 // CREATING A FRESH USER 
 module.exports.create = async function (req, res) {
     console.log(req.body);
+    res.set('Access-Control-Allow-Origin', '*');
     let user = await User.findOne({ email: req.body.email })
 
     if (!user) {
@@ -45,6 +46,7 @@ module.exports.create = async function (req, res) {
 // ADDING ITEMS TO CART AND CREATING A USER IF NOT CREATED 
 module.exports.addToCart = async function (req, res) {
     console.log(req.body);
+    res.set('Access-Control-Allow-Origin', '*');
 
 
     if (!(req.body.product_name && req.body.seller_email && req.body.buyer_email && req.body.item_count)) {
@@ -130,6 +132,7 @@ module.exports.addToCart = async function (req, res) {
 // View the Cart Items 
 module.exports.viewCart = async function (req, res) {
     console.log(req.query.user_email);
+    res.set('Access-Control-Allow-Origin', '*');
 
     let user =await User.findOne({email : req.query.user_email})
     // console.log(user._id)

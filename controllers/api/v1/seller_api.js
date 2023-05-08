@@ -2,7 +2,8 @@ const Product = require('../../../models/product');
 
 module.exports.sellProduct = async function (req, res) {
     console.log(req.body);
-
+    res.set('Access-Control-Allow-Origin', '*');
+    
     try {
         Product.create(req.body)
             .then(product => {

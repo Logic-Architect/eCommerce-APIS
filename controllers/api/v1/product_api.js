@@ -5,6 +5,7 @@ module.exports.viewAll = async function(req,res){
     Product.find({})
     .then(products=>{
         console.log(products)
+        res.set('Access-Control-Allow-Origin', '*');
         return res.status(200).json({
             product : products
         })

@@ -3,13 +3,14 @@ const mongoose = require('mongoose');
 const { float } = require('webidl-conversions');
 
 const productSchema = new mongoose.Schema({
-    seller_email : {
-        type : String,
-        required : true
-    },
     seller_name : {
         type : String,
-        required : true
+        // required : true
+    },
+    seller_email : {
+        type : String,
+        // required : true,
+        // $exists: true
     },
     product_name :{
         type : String,
@@ -35,6 +36,7 @@ const productSchema = new mongoose.Schema({
 },{
     timestamps : true
 })
+
 
 const Product = mongoose.model('Product',productSchema);
 

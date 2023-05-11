@@ -1,6 +1,6 @@
 const User = require('../../../models/user');
 const Product = require('../../../models/product')
-const Sold = require('../../../models/sold')
+const Sold = require('../../../models/sold');
 
 
 // CREATING A FRESH USER 
@@ -74,11 +74,16 @@ module.exports.addToCart = async function (req, res) {
     }
     console.log('Item added to cart is ', item)
 
+    let userInfo;
     // Check whether User is registered or not 
-    let user = await User.findOne({ email: buyer })
+    let user = await User.findOne({ email: buyer });
+    userInfo = user
     if (!user) {
-        await User.create({ email: req.body.email });
-        await Sold.create({ buyer: user._id })
+         await User.create({ email: buyer })
+         .then(async user=>{
+             await Sold.create({ buyer: user._id })
+             userInfo = user
+         })
         console.log('User and its cart Created');
         user = await User.findOne({ email: buyer })
     }
@@ -103,7 +108,7 @@ module.exports.addToCart = async function (req, res) {
     console.log(updatedCount,product.item_count,item.item_count)
 
     // await Sold.create({ buyer: user._id })
-    await Sold.findOne({ buyer: user._id })
+    await Sold.findOne({ buyer: userInfo._id })
         .then(async(userCart) => {
             console.log('0', userCart)
             userCart.product.push(item);
@@ -136,6 +141,11 @@ module.exports.viewCart = async function (req, res) {
 
     let user =await User.findOne({email : req.query.user_email})
     // console.log(user._id)
+    if(!user){
+        return res.status(400).json({
+            message : 'User Does Not Exist'
+        })
+    }
 
     Sold.findOne({ buyer: user._id})
         .then(async (cart) => {
@@ -152,7 +162,7 @@ module.exports.viewCart = async function (req, res) {
                                 seller_email : temp.seller_email,
                                 sold_by : temp.seller_name,
                                 product_name : temp.product_name,
-                                sold_at : temp.buy_price,
+                                sold_at : temp.sell_price,
                                 discount : temp.discount
                             },
                             quantity_buyed : items.item_count
